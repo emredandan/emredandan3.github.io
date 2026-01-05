@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crypto Snake - Web3 Oyunu</title>
+    <title>EMRE Token Oyunu - Web3 Blockchain Oyunu</title>
     <style>
         * {
             margin: 0;
@@ -14,36 +14,44 @@
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
             min-height: 100vh;
-            padding: 20px;
+            color: #fff;
+            overflow-x: hidden;
         }
 
         .container {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            max-width: 800px;
-            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 30px 0;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
         }
 
         h1 {
-            text-align: center;
-            color: #667eea;
-            margin-bottom: 20px;
             font-size: 2.5em;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
         }
 
         .wallet-section {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            background: rgba(255, 255, 255, 0.1);
             padding: 20px;
             border-radius: 15px;
-            margin-bottom: 20px;
-            color: white;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.2);
         }
 
         .wallet-info {
@@ -55,1390 +63,1042 @@
         }
 
         .wallet-address {
+            font-family: monospace;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 0.9em;
+        }
+
+        .token-balance {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        .token-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        button {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .game-container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .game-canvas-wrapper {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+            background: #1a1a2e;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        #gameCanvas {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+
+        .game-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .stat-card {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.8;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #f093fb;
+        }
+
+        .game-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .claim-section {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+        }
+
+        .claim-amount {
+            font-size: 3em;
+            font-weight: bold;
+            margin: 20px 0;
+            color: #f093fb;
+            text-shadow: 0 0 20px rgba(240, 147, 251, 0.5);
+        }
+
+        .claim-button {
+            font-size: 1.2em;
+            padding: 15px 50px;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(56, 239, 125, 0.5);
+            }
+            50% {
+                box-shadow: 0 0 40px rgba(56, 239, 125, 0.8);
+            }
+        }
+
+        .info-section {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 30px;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .info-section h2 {
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        .info-section p {
+            line-height: 1.8;
+            margin-bottom: 15px;
+            opacity: 0.9;
+        }
+
+        .contract-info {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-family: monospace;
             font-size: 0.9em;
             word-break: break-all;
-            flex: 1;
-            min-width: 200px;
         }
 
-        .connect-btn, .claim-btn, .add-network-btn {
-            background: white;
-            color: #f5576c;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 25px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 1em;
-            margin: 5px;
-        }
-
-        .add-network-btn {
-            background: #4caf50;
-            color: white;
-        }
-
-        .connect-btn:hover, .claim-btn:hover, .add-network-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        .connect-btn:disabled, .claim-btn:disabled, .add-network-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .game-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .stat-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        .transaction-status {
+            margin-top: 15px;
             padding: 15px;
-            border-radius: 10px;
-            text-align: center;
-            color: white;
-        }
-
-        .stat-label {
-            font-size: 0.9em;
-            opacity: 0.9;
-            margin-bottom: 5px;
-        }
-
-        .stat-value {
-            font-size: 1.8em;
-            font-weight: bold;
-        }
-
-        .game-container {
-            position: relative;
-            display: flex;
-            justify-content: center;
-            margin-bottom: 20px;
-        }
-
-        #gameCanvas {
-            border: 3px solid #667eea;
-            border-radius: 10px;
-            background: #1a1a2e;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        }
-
-        .controls {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            flex-wrap: wrap;
-            margin-bottom: 20px;
-        }
-
-        .control-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 25px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 1em;
-        }
-
-        .control-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-        }
-
-        .game-over-modal {
+            border-radius: 8px;
             display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.8);
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
         }
 
-        .modal-content {
-            background: white;
-            padding: 40px;
-            border-radius: 20px;
+        .transaction-status.success {
+            background: rgba(56, 239, 125, 0.2);
+            border: 1px solid rgba(56, 239, 125, 0.5);
+            display: block;
+        }
+
+        .transaction-status.error {
+            background: rgba(245, 87, 108, 0.2);
+            border: 1px solid rgba(245, 87, 108, 0.5);
+            display: block;
+        }
+
+        .loading {
+            display: none;
             text-align: center;
-            max-width: 500px;
-            width: 90%;
-            animation: modalSlide 0.3s ease;
+            padding: 20px;
         }
 
-        @keyframes modalSlide {
-            from {
-                transform: translateY(-50px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
+        .loading.active {
+            display: block;
         }
 
-        .modal-content h2 {
-            color: #f5576c;
-            margin-bottom: 20px;
-            font-size: 2em;
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid #fff;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
         }
 
-        .coin-display {
-            font-size: 3em;
-            color: #ffd700;
-            margin: 20px 0;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
-        .modal-buttons {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            margin-top: 20px;
-        }
-
-        .instructions {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 20px;
+        .network-badge {
+            display: inline-block;
+            background: rgba(56, 239, 125, 0.2);
+            border: 1px solid rgba(56, 239, 125, 0.5);
+            padding: 5px 15px;
+            border-radius: 20px;
             font-size: 0.9em;
-            color: #666;
+            margin-top: 10px;
         }
 
-        .instructions h3 {
-            color: #667eea;
+        .guide-section {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 30px;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .guide-section h3 {
+            margin-top: 20px;
             margin-bottom: 10px;
+            color: #f093fb;
         }
 
-        .instructions ul {
-            list-style-position: inside;
+        .guide-section ol, .guide-section ul {
+            margin-left: 20px;
             line-height: 1.8;
         }
 
-        @media (max-width: 600px) {
+        .code-block {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+        }
+
+        @media (max-width: 768px) {
             h1 {
                 font-size: 1.8em;
             }
 
-            .container {
-                padding: 20px;
+            .wallet-info {
+                flex-direction: column;
+                align-items: stretch;
             }
 
-            #gameCanvas {
-                max-width: 100%;
-                height: auto;
+            .game-stats {
+                grid-template-columns: 1fr 1fr;
             }
-        }
 
-        .coin-icon {
-            display: inline-block;
-            color: #ffd700;
-            font-size: 1.2em;
-        }
-
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: white;
-            padding: 15px 25px;
-            border-radius: 10px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
-            display: none;
-            z-index: 2000;
-            animation: slideIn 0.3s ease;
-        }
-
-        @keyframes slideIn {
-            from {
-                transform: translateX(400px);
-                opacity: 0;
+            .claim-amount {
+                font-size: 2em;
             }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-
-        .notification.success {
-            border-left: 4px solid #4caf50;
-        }
-
-        .notification.error {
-            border-left: 4px solid #f44336;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🐍 Crypto Snake</h1>
-        
-        <div class="wallet-section">
-            <div class="wallet-info">
-                <div class="wallet-address" id="walletAddress">
-                    Cüzdan bağlı değil
-                </div>
-                <button class="add-network-btn" id="addNetworkBtn">
-                    1. Tempo'yu MetaMask'e Ekle
-                </button>
-                <button class="connect-btn" id="connectWallet">
-                    2. Cüzdan Bağla
-                </button>
-            </div>
-        </div>
+        <header>
+            <h1>🎮 EMRE Token Oyunu</h1>
+            <p class="subtitle">Oyna, Kazan, Claim Et - Web3 Blockchain Oyunu</p>
+            <div class="network-badge">🌐 Tempo Network Destekli</div>
+        </header>
 
-        <div class="game-stats">
-            <div class="stat-card">
-                <div class="stat-label">Skor</div>
-                <div class="stat-value" id="score">0</div>
+        <div class="wallet-section">
+            <h2>💳 Cüzdan Bilgileri</h2>
+            <div class="wallet-info">
+                <div>
+                    <div class="wallet-address" id="walletAddress">Cüzdan Bağlanmamış</div>
+                    <button id="connectWallet">Cüzdan Bağla</button>
+                </div>
+                <div class="token-balance">
+                    <div class="token-icon">E</div>
+                    <span id="tokenBalance">0</span> EMRE
+                </div>
             </div>
-            <div class="stat-card">
-                <div class="stat-label"><span class="coin-icon">🪙</span> Toplanan Coin</div>
-                <div class="stat-value" id="coins">0</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">En Yüksek Skor</div>
-                <div class="stat-value" id="highScore">0</div>
-            </div>
+            <div class="transaction-status" id="transactionStatus"></div>
         </div>
 
         <div class="game-container">
-            <canvas id="gameCanvas" width="600" height="600"></canvas>
-        </div>
-
-        <div class="controls">
-            <button class="control-btn" id="startBtn">Oyunu Başlat</button>
-            <button class="control-btn" id="pauseBtn" style="display: none;">Duraklat</button>
-        </div>
-
-        <div class="instructions">
-            <h3>📖 Nasıl Oynanır?</h3>
-            <ul>
-                <li>Ok tuşları veya W/A/S/D ile yılanı kontrol edin</li>
-                <li>Altın toplayan her yılan 1 coin kazanır 🪙</li>
-                <li>Duvara veya kendi vücudunuza çarpmayın</li>
-                <li>Oyun bittiğinde coinlerinizi cüzdanınıza aktarabilirsiniz</li>
-                <li><strong>Web3 Entegrasyonu:</strong> Tempo Testnet ekleyin, cüzdan bağlayın. Claim için test token'larınız olsun!</li>
-            </ul>
-        </div>
-    </div>
-
-    <div class="game-over-modal" id="gameOverModal">
-        <div class="modal-content">
-            <h2>🎮 Oyun Bitti!</h2>
-            <p>Toplam Skor: <strong id="finalScore">0</strong></p>
-            <div class="coin-display">
-                🪙 <span id="finalCoins">0</span> COIN
+            <h2>🎯 Oyun - Yakala ve Kazan!</h2>
+            <p style="text-align: center; margin-bottom: 20px;">Ok tuşları ile hareket et ve düşen EMRE tokenlerini yakala!</p>
+            
+            <div class="game-canvas-wrapper">
+                <canvas id="gameCanvas" width="800" height="600"></canvas>
             </div>
-            <p id="claimMessage">Coinlerinizi cüzdanınıza aktarmak için Claim butonuna tıklayın!</p>
-            <div class="modal-buttons">
-                <button class="claim-btn" id="claimBtn">
-                    Claim Coins
-                </button>
-                <button class="control-btn" id="playAgainBtn">
-                    Tekrar Oyna
-                </button>
-            </div>
-        </div>
-    </div>
 
-    <div class="notification" id="notification"></div>
-
-    <script>
-        const canvas = document.getElementById('gameCanvas');
-        const ctx = canvas.getContext('2d');
-        const gridSize = 20;
-        const tileCount = canvas.width / gridSize;
-
-        let snake = [{x: 10, y: 10}];
-        let velocity = {x: 0, y: 0};
-        let food = {x: 15, y: 15};
-        let score = 0;
-        let coins = 0;
-        let gameRunning = false;
-        let gamePaused = false;
-        let gameLoop;
-        let walletAddress = null;
-        let highScore = 0;
-
-        // Web3 Integration (Genişletildi: Ağ kontrolü eklendi)
-        let web3;
-        let contract;
-
-        // Elements
-        const addNetworkBtn = document.getElementById('addNetworkBtn');
-        const connectWalletBtn = document.getElementById('connectWallet');
-        const walletAddressEl = document.getElementById('walletAddress');
-        const scoreEl = document.getElementById('score');
-        const coinsEl = document.getElementById('coins');
-        const highScoreEl = document.getElementById('highScore');
-        const startBtn = document.getElementById('startBtn');
-        const pauseBtn = document.getElementById('pauseBtn');
-        const gameOverModal = document.getElementById('gameOverModal');
-        const claimBtn = document.getElementById('claimBtn');
-        const playAgainBtn = document.getElementById('playAgainBtn');
-        const notification = document.getElementById('notification');
-
-        // 1. Tempo Network Ekleme (network-config.js'den)
-        addNetworkBtn.addEventListener('click', addTempoNetwork);
-
-        // 2. Cüzdan Bağlama (Geliştirildi: Ağ kontrolü eklendi, network-config.js ile entegre)
-        connectWalletBtn.addEventListener('click', async () => {
-            try {
-                if (typeof window.ethereum !== 'undefined') {
-                    // Önce ağı kontrol et (Tempo Testnet olmalı)
-                    const chainId = await window.ethereum.request({ method: 'eth_chainId' });
-                    const tempoChainId = '0xa5ad'; // Tempo Testnet Chain ID (hex)
-                    if (chainId !== tempoChainId) {
-                        showNotification('Uyarı: Tempo Testnet ağına geçin! (Yukarıdaki butonla ekleyin)', 'error');
-                        await addTempoNetwork(); // Otomatik ekle ve değiştir
-                        // Ağ değiştirme isteği (opsiyonel, kullanıcı onayı ister)
-                        try {
-                            await window.ethereum.request({
-                                method: 'wallet_switchEthereumChain',
-                                params: [{ chainId: tempoChainId }]
-                            });
-                        } catch (switchError) {
-                            if (switchError.code === 4902) {
-                                // Ağ yok, ekle
-                                await addTempoNetwork();
-                            }
-                        }
-                    }
-
-                    const accounts = await window.ethereum.request({ 
-                        method: 'eth_requestAccounts' 
-                    });
-                    walletAddress = accounts[0];
-                    walletAddressEl.textContent = `${walletAddress.substring(0, 6)}...${walletAddress.substring(38)}`;
-                    connectWalletBtn.textContent = 'Bağlı ✓';
-                    connectWalletBtn.disabled = true;
-                    showNotification('Cüzdan başarıyla bağlandı! Tempo Testnet kontrol edildi.', 'success');
-                } else {
-                    showNotification('Lütfen MetaMask veya başka bir Web3 cüzdanı yükleyin!', 'error');
-                }
-            } catch (error) {
-                console.error('Cüzdan bağlantı hatası:', error);
-                showNotification('Cüzdan bağlanırken hata oluştu! (' + error.message + ')', 'error');
-            }
-        });
-
-        // Game Controls (Değişmedi)
-        startBtn.addEventListener('click', startGame);
-        pauseBtn.addEventListener('click', togglePause);
-        playAgainBtn.addEventListener('click', resetGame);
-        claimBtn.addEventListener('click', claimCoins);
-
-        // Keyboard Controls (Değişmedi)
-        document.addEventListener('keydown', (e) => {
-            if (!gameRunning || gamePaused) return;
-
-            switch(e.key) {
-                case 'ArrowUp':
-                case 'w':
-                case 'W':
-                    if (velocity.y === 0) velocity = {x: 0, y: -1};
-                    break;
-                case 'ArrowDown':
-                case 's':
-                case 'S':
-                    if (velocity.y === 0) velocity = {x: 0, y: 1};
-                    break;
-                case 'ArrowLeft':
-                case 'a':
-                case 'A':
-                    if (velocity.x === 0) velocity = {x: -1, y: 0};
-                    break;
-                case 'ArrowRight':
-                case 'd':
-                case 'D':
-                    if (velocity.x === 0) velocity = {x: 1, y: 0};
-                    break;
-            }
-        });
-
-        function startGame() {
-            if (gameRunning) return;
-            
-            gameRunning = true;
-            gamePaused = false;
-            startBtn.style.display = 'none';
-            pauseBtn.style.display = 'inline-block';
-            
-            snake = [{x: 10, y: 10}];
-            velocity = {x: 1, y: 0};
-            score = 0;
-            coins = 0;
-            updateScore();
-            
-            placeFood();
-            gameLoop = setInterval(update, 100);
-        }
-
-        function togglePause() {
-            gamePaused = !gamePaused;
-            pauseBtn.textContent = gamePaused ? 'Devam Et' : 'Duraklat';
-        }
-
-        function resetGame() {
-            gameOverModal.style.display = 'none';
-            gameRunning = false;
-            startBtn.style.display = 'inline-block';
-            pauseBtn.style.display = 'none';
-            drawGame();
-        }
-
-        function update() {
-            if (gamePaused) return;
-
-            try {
-                // Move snake
-                const head = {
-                    x: snake[0].x + velocity.x,
-                    y: snake[0].y + velocity.y
-                };
-
-                // Check wall collision
-                if (head.x < 0 || head.x >= tileCount || head.y < 0 || head.y >= tileCount) {
-                    gameOver();
-                    return;
-                }
-
-                // Check self collision
-                for (let segment of snake) {
-                    if (head.x === segment.x && head.y === segment.y) {
-                        gameOver();
-                        return;
-                    }
-                }
-
-                snake.unshift(head);
-
-                // Check food collision
-                if (head.x === food.x && head.y === food.y) {
-                    score += 10;
-                    coins += 1;
-                    updateScore();
-                    placeFood();
-                    playCollectSound();
-                } else {
-                    snake.pop();
-                }
-
-                drawGame();
-            } catch (error) {
-                console.error('Oyun güncelleme hatası:', error);
-            }
-        }
-
-        function drawGame() {
-            // Clear canvas
-            ctx.fillStyle = '#1a1a2e';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            // Draw grid
-            ctx.strokeStyle = '#2a2a3e';
-            ctx.lineWidth = 1;
-            for (let i = 0; i <= tileCount; i++) {
-                ctx.beginPath();
-                ctx.moveTo(i * gridSize, 0);
-                ctx.lineTo(i * gridSize, canvas.height);
-                ctx.stroke();
-                ctx.beginPath();
-                ctx.moveTo(0, i * gridSize);
-                ctx.lineTo(canvas.width, i * gridSize);
-                ctx.stroke();
-            }
-
-            // Draw snake
-            snake.forEach((segment, index) => {
-                const gradient = ctx.createLinearGradient(
-                    segment.x * gridSize, 
-                    segment.y * gridSize,
-                    (segment.x + 1) * gridSize, 
-                    (segment.y + 1) * gridSize
-                );
-                
-                if (index === 0) {
-                    gradient.addColorStop(0, '#00ff88');
-                    gradient.addColorStop(1, '#00cc66');
-                } else {
-                    gradient.addColorStop(0, '#667eea');
-                    gradient.addColorStop(1, '#764ba2');
-                }
-                
-                ctx.fillStyle = gradient;
-                ctx.fillRect(
-                    segment.x * gridSize + 1, 
-                    segment.y * gridSize + 1, 
-                    gridSize - 2, 
-                    gridSize - 2
-                );
-
-                // Draw eyes on head
-                if (index === 0) {
-                    ctx.fillStyle = 'white';
-                    ctx.fillRect(segment.x * gridSize + 5, segment.y * gridSize + 5, 4, 4);
-                    ctx.fillRect(segment.x * gridSize + 11, segment.y * gridSize + 5, 4, 4);
-                }
-            });
-
-            // Draw food (coin)
-            const foodGradient = ctx.createRadialGradient(
-                food.x * gridSize + gridSize / 2,
-                food.y * gridSize + gridSize / 2,
-                0,
-                food.x * gridSize + gridSize / 2,
-                food.y * gridSize + gridSize / 2,
-                gridSize / 2
-            );
-            foodGradient.addColorStop(0, '#ffd700');
-            foodGradient.addColorStop(0.5, '#ffed4e');
-            foodGradient.addColorStop(1, '#ff9800');
-            
-            ctx.fillStyle = foodGradient;
-            ctx.beginPath();
-            ctx.arc(
-                food.x * gridSize + gridSize / 2,
-                food.y * gridSize + gridSize / 2,
-                gridSize / 2 - 2,
-                0,
-                Math.PI * 2
-            );
-            ctx.fill();
-
-            // Draw coin symbol
-            ctx.fillStyle = '#000';
-            ctx.font = 'bold 12px Arial';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText('$', food.x * gridSize + gridSize / 2, food.y * gridSize + gridSize / 2);
-        }
-
-        function placeFood() {
-            food = {
-                x: Math.floor(Math.random() * tileCount),
-                y: Math.floor(Math.random() * tileCount)
-            };
-
-            // Make sure food doesn't spawn on snake
-            for (let segment of snake) {
-                if (food.x === segment.x && food.y === segment.y) {
-                    placeFood();
-                    return;
-                }
-            }
-        }
-
-        function updateScore() {
-            scoreEl.textContent = score;
-            coinsEl.textContent = coins;
-            
-            if (score > highScore) {
-                highScore = score;
-                highScoreEl.textContent = highScore;
-            }
-        }
-
-        function gameOver() {
-            gameRunning = false;
-            clearInterval(gameLoop);
-            
-            document.getElementById('finalScore').textContent = score;
-            document.getElementById('finalCoins').textContent = coins;
-            
-            if (!walletAddress) {
-                document.getElementById('claimMessage').textContent = 
-                    'Coinlerinizi almak için önce cüzdanınızı bağlayın!';
-                claimBtn.disabled = true;
-            } else {
-                document.getElementById('claimMessage').textContent = 
-                    'Coinlerinizi cüzdanınıza aktarmak için Claim butonuna tıklayın! (Tempo Testnet\'te test token gerekli)';
-                claimBtn.disabled = false;
-            }
-            
-            gameOverModal.style.display = 'flex';
-        }
-
-        async function claimCoins() {
-            if (!walletAddress) {
-                showNotification('Lütfen önce cüzdanınızı bağlayın!', 'error');
-                return;
-            }
-
-            if (coins === 0) {
-                showNotification('Claim edilecek coin yok!', 'error');
-                return;
-            }
-
-            // Ağ kontrolü
-            try {
-                const chainId = await window.ethereum.request({ method: 'eth_chainId' });
-                if (chainId !== '0xa5ad') {
-                    showNotification('Tempo Testnet ağına geçin!', 'error');
-                    return;
-                }
-            } catch (error) {
-                showNotification('Ağ kontrolü hatası!', 'error');
-                return;
-            }
-
-            try {
-                claimBtn.disabled = true;
-                claimBtn.textContent = 'İşlem yapılıyor...';
-
-                // Gerçek Web3 entegrasyonu için hazır (şimdilik simüle, kontrat adresi ekle)
-                // Örnek: await contract.methods.claim(coins).send({from: walletAddress});
-                await new Promise(resolve => setTimeout(resolve, 2000)); // Simüle işlem
-
-                showNotification(`${coins} COIN başarıyla cüzdanınıza aktarıldı! (Testnet token)', 'success');
-                
-                claimBtn.textContent = 'Claim Başarılı ✓';
-                
-                // Reset coins after claim
-                setTimeout(() => {
-                    coins = 0;
-                    updateScore();
-                    claimBtn.disabled = false;
-                    claimBtn.textContent = 'Claim Coins';
-                }, 1500);
-
-            } catch (error) {
-                console.error('Claim hatası:', error);
-                showNotification('Claim işlemi başarısız oldu! (' + error.message + ')', 'error');
-                claimBtn.disabled = false;
-                claimBtn.textContent = 'Claim Coins';
-            }
-        }
-
-        function playCollectSound() {
-            // Simple beep sound using Web Audio API
-            try {
-                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                const oscillator = audioContext.createOscillator();
-                const gainNode = audioContext.createGain();
-                
-                oscillator.connect(gainNode);
-                gainNode.connect(audioContext.destination);
-                
-                oscillator.frequency.value = 800;
-                oscillator.type = 'sine';
-                
-                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
-                
-                oscillator.start(audioContext.currentTime);
-                oscillator.stop(audioContext.currentTime + 0.1);
-            } catch (error) {
-                console.error('Ses çalma hatası:', error);
-            }
-        }
-
-        function showNotification(message, type) {
-            notification.textContent = message;
-            notification.className = `notification ${type}`;
-            notification.style.display = 'block';
-            
-            setTimeout(() => {
-                notification.style.display = 'none';
-            }, 3000);
-        }
-
-        // Initialize
-        drawGame();
-        highScoreEl.textContent = highScore;
-
-        // Sayfa yüklendiğinde network-config.js fonksiyonlarını yükle (eğer tanımlıysa)
-        window.addEventListener('load', function() {
-            if (typeof addTempoNetwork !== 'undefined') {
-                console.log("network-config.js yüklendi!");
-            }
-        });
-    </script>
-
-    <!-- EN ÖNEMLİ: network-config.js'yi en alta ekle (HTML'in sonuna) -->
-    <script src="network-config.js"></script>
-</body>
-</html>
-        .connect-btn, .claim-btn {
-            background: white;
-            color: #f5576c;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 25px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 1em;
-        }
-
-        .connect-btn:hover, .claim-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        .connect-btn:disabled, .claim-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .game-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .stat-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 15px;
-            border-radius: 10px;
-            text-align: center;
-            color: white;
-        }
-
-        .stat-label {
-            font-size: 0.9em;
-            opacity: 0.9;
-            margin-bottom: 5px;
-        }
-
-        .stat-value {
-            font-size: 1.8em;
-            font-weight: bold;
-        }
-
-        .game-container {
-            position: relative;
-            display: flex;
-            justify-content: center;
-            margin-bottom: 20px;
-        }
-
-        #gameCanvas {
-            border: 3px solid #667eea;
-            border-radius: 10px;
-            background: #1a1a2e;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        }
-
-        .controls {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            flex-wrap: wrap;
-            margin-bottom: 20px;
-        }
-
-        .control-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 25px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 1em;
-        }
-
-        .control-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-        }
-
-        .game-over-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.8);
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-
-        .modal-content {
-            background: white;
-            padding: 40px;
-            border-radius: 20px;
-            text-align: center;
-            max-width: 500px;
-            width: 90%;
-            animation: modalSlide 0.3s ease;
-        }
-
-        @keyframes modalSlide {
-            from {
-                transform: translateY(-50px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        .modal-content h2 {
-            color: #f5576c;
-            margin-bottom: 20px;
-            font-size: 2em;
-        }
-
-        .coin-display {
-            font-size: 3em;
-            color: #ffd700;
-            margin: 20px 0;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-        }
-
-        .modal-buttons {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            margin-top: 20px;
-        }
-
-        .instructions {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 20px;
-            font-size: 0.9em;
-            color: #666;
-        }
-
-        .instructions h3 {
-            color: #667eea;
-            margin-bottom: 10px;
-        }
-
-        .instructions ul {
-            list-style-position: inside;
-            line-height: 1.8;
-        }
-
-        @media (max-width: 600px) {
-            h1 {
-                font-size: 1.8em;
-            }
-
-            .container {
-                padding: 20px;
-            }
-
-            #gameCanvas {
-                max-width: 100%;
-                height: auto;
-            }
-        }
-
-        .coin-icon {
-            display: inline-block;
-            color: #ffd700;
-            font-size: 1.2em;
-        }
-
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: white;
-            padding: 15px 25px;
-            border-radius: 10px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
-            display: none;
-            z-index: 2000;
-            animation: slideIn 0.3s ease;
-        }
-
-        @keyframes slideIn {
-            from {
-                transform: translateX(400px);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-
-        .notification.success {
-            border-left: 4px solid #4caf50;
-        }
-
-        .notification.error {
-            border-left: 4px solid #f44336;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>🐍 Crypto Snake</h1>
-        
-        <div class="wallet-section">
-            <div class="wallet-info">
-                <div class="wallet-address" id="walletAddress">
-                    Cüzdan bağlı değil
+            <div class="game-stats">
+                <div class="stat-card">
+                    <div class="stat-label">Skor</div>
+                    <div class="stat-value" id="score">0</div>
                 </div>
-                <button class="connect-btn" id="connectWallet">
-                    Cüzdan Bağla
-                </button>
+                <div class="stat-card">
+                    <div class="stat-label">Kazanılan Token</div>
+                    <div class="stat-value" id="earnedTokens">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Seviye</div>
+                    <div class="stat-value" id="level">1</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">En Yüksek Skor</div>
+                    <div class="stat-value" id="highScore">0</div>
+                </div>
+            </div>
+
+            <div class="game-controls">
+                <button id="startGame">Oyunu Başlat</button>
+                <button id="pauseGame" disabled>Duraklat</button>
+                <button id="resetGame">Sıfırla</button>
             </div>
         </div>
 
-        <div class="game-stats">
-            <div class="stat-card">
-                <div class="stat-label">Skor</div>
-                <div class="stat-value" id="score">0</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label"><span class="coin-icon">🪙</span> Toplanan Coin</div>
-                <div class="stat-value" id="coins">0</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">En Yüksek Skor</div>
-                <div class="stat-value" id="highScore">0</div>
+        <div class="claim-section">
+            <h2>💰 Token Claim</h2>
+            <p>Oyunda kazandığın tokenlerini blockchain'e claim et!</p>
+            <div class="claim-amount" id="claimAmount">0 EMRE</div>
+            <button class="claim-button" id="claimButton" disabled>Tokenlerimi Claim Et</button>
+            <div class="loading" id="claimLoading">
+                <div class="spinner"></div>
+                <p>İşlem gerçekleştiriliyor...</p>
             </div>
         </div>
 
-        <div class="game-container">
-            <canvas id="gameCanvas" width="600" height="600"></canvas>
-        </div>
-
-        <div class="controls">
-            <button class="control-btn" id="startBtn">Oyunu Başlat</button>
-            <button class="control-btn" id="pauseBtn" style="display: none;">Duraklat</button>
-        </div>
-
-        <div class="instructions">
-            <h3>📖 Nasıl Oynanır?</h3>
+        <div class="info-section">
+            <h2>ℹ️ Proje Hakkında</h2>
+            <p>EMRE Token Oyunu, Tempo Network üzerinde çalışan Web3 tabanlı bir blockchain oyunudur. Oyunda kazandığınız tokenler gerçek blockchain üzerinde saklanır ve istediğiniz zaman claim edebilirsiniz.</p>
+            
+            <h3>🎮 Nasıl Oynanır?</h3>
             <ul>
-                <li>Ok tuşları veya W/A/S/D ile yılanı kontrol edin</li>
-                <li>Altın toplayan her yılan 1 coin kazanır 🪙</li>
-                <li>Duvara veya kendi vücudunuza çarpmayın</li>
-                <li>Oyun bittiğinde coinlerinizi cüzdanınıza aktarabilirsiniz</li>
-                <li>Web3 cüzdanınızı (MetaMask vb.) bağlayın</li>
+                <li>Ok tuşlarını kullanarak karakterinizi hareket ettirin</li>
+                <li>Düşen EMRE tokenlerini yakalayın</li>
+                <li>Her yakalanan token için puan kazanın</li>
+                <li>Engellere çarpmamaya dikkat edin</li>
+                <li>Kazandığınız tokenler otomatik olarak claim havuzunuza eklenir</li>
             </ul>
-        </div>
-    </div>
 
-    <div class="game-over-modal" id="gameOverModal">
-        <div class="modal-content">
-            <h2>🎮 Oyun Bitti!</h2>
-            <p>Toplam Skor: <strong id="finalScore">0</strong></p>
-            <div class="coin-display">
-                🪙 <span id="finalCoins">0</span> COIN
-            </div>
-            <p id="claimMessage">Coinlerinizi cüzdanınıza aktarmak için Claim butonuna tıklayın!</p>
-            <div class="modal-buttons">
-                <button class="claim-btn" id="claimBtn">
-                    Claim Coins
-                </button>
-                <button class="control-btn" id="playAgainBtn">
-                    Tekrar Oyna
-                </button>
+            <h3>🔗 Tempo Network</h3>
+            <p>Tempo, yüksek performanslı ve düşük maliyetli işlemler sunan modern bir blockchain ağıdır. Bu oyun Tempo testnet üzerinde çalışmaktadır.</p>
+
+            <div class="contract-info">
+                <strong>Smart Contract Adresi:</strong><br>
+                <span id="contractAddress">0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb4</span><br><br>
+                <strong>Token Sembolü:</strong> EMRE<br>
+                <strong>Decimals:</strong> 18<br>
+                <strong>Network:</strong> Tempo Testnet
             </div>
         </div>
-    </div>
 
-    <div class="notification" id="notification"></div>
-
-    <script>
-        const canvas = document.getElementById('gameCanvas');
-        const ctx = canvas.getContext('2d');
-        const gridSize = 20;
-        const tileCount = canvas.width / gridSize;
-
-        let snake = [{x: 10, y: 10}];
-        let velocity = {x: 0, y: 0};
-        let food = {x: 15, y: 15};
-        let score = 0;
-        let coins = 0;
-        let gameRunning = false;
-        let gamePaused = false;
-        let gameLoop;
-        let walletAddress = null;
-        let highScore = 0;
-
-        // Web3 Integration
-        let web3;
-        let contract;
-
-        // Elements
-        const connectWalletBtn = document.getElementById('connectWallet');
-        const walletAddressEl = document.getElementById('walletAddress');
-        const scoreEl = document.getElementById('score');
-        const coinsEl = document.getElementById('coins');
-        const highScoreEl = document.getElementById('highScore');
-        const startBtn = document.getElementById('startBtn');
-        const pauseBtn = document.getElementById('pauseBtn');
-        const gameOverModal = document.getElementById('gameOverModal');
-        const claimBtn = document.getElementById('claimBtn');
-        const playAgainBtn = document.getElementById('playAgainBtn');
-        const notification = document.getElementById('notification');
-
-        // Connect Wallet
-        connectWalletBtn.addEventListener('click', async () => {
-            try {
-                if (typeof window.ethereum !== 'undefined') {
-                    const accounts = await window.ethereum.request({ 
-                        method: 'eth_requestAccounts' 
-                    });
-                    walletAddress = accounts[0];
-                    walletAddressEl.textContent = `${walletAddress.substring(0, 6)}...${walletAddress.substring(38)}`;
-                    connectWalletBtn.textContent = 'Bağlı ✓';
-                    connectWalletBtn.disabled = true;
-                    showNotification('Cüzdan başarıyla bağlandı!', 'success');
-                } else {
-                    showNotification('Lütfen MetaMask veya başka bir Web3 cüzdanı yükleyin!', 'error');
-                }
-            } catch (error) {
-                console.error('Cüzdan bağlantı hatası:', error);
-                showNotification('Cüzdan bağlanırken hata oluştu!', 'error');
-            }
-        });
-
-        // Game Controls
-        startBtn.addEventListener('click', startGame);
-        pauseBtn.addEventListener('click', togglePause);
-        playAgainBtn.addEventListener('click', resetGame);
-        claimBtn.addEventListener('click', claimCoins);
-
-        // Keyboard Controls
-        document.addEventListener('keydown', (e) => {
-            if (!gameRunning || gamePaused) return;
-
-            switch(e.key) {
-                case 'ArrowUp':
-                case 'w':
-                case 'W':
-                    if (velocity.y === 0) velocity = {x: 0, y: -1};
-                    break;
-                case 'ArrowDown':
-                case 's':
-                case 'S':
-                    if (velocity.y === 0) velocity = {x: 0, y: 1};
-                    break;
-                case 'ArrowLeft':
-                case 'a':
-                case 'A':
-                    if (velocity.x === 0) velocity = {x: -1, y: 0};
-                    break;
-                case 'ArrowRight':
-                case 'd':
-                case 'D':
-                    if (velocity.x === 0) velocity = {x: 1, y: 0};
-                    break;
-            }
-        });
-
-        function startGame() {
-            if (gameRunning) return;
+        <div class="guide-section">
+            <h2>📚 Geliştirici Rehberi</h2>
             
-            gameRunning = true;
-            gamePaused = false;
-            startBtn.style.display = 'none';
-            pauseBtn.style.display = 'inline-block';
-            
-            snake = [{x: 10, y: 10}];
-            velocity = {x: 1, y: 0};
-            score = 0;
-            coins = 0;
-            updateScore();
-            
-            placeFood();
-            gameLoop = setInterval(update, 100);
-        }
+            <h3>1. Smart Contract (Solidity)</h3>
+            <p>Remix IDE'de aşağıdaki smart contract kodunu kullanın:</p>
+            <div class="code-block">
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
 
-        function togglePause() {
-            gamePaused = !gamePaused;
-            pauseBtn.textContent = gamePaused ? 'Devam Et' : 'Duraklat';
-        }
-
-        function resetGame() {
-            gameOverModal.style.display = 'none';
-            gameRunning = false;
-            startBtn.style.display = 'inline-block';
-            pauseBtn.style.display = 'none';
-            drawGame();
-        }
-
-        function update() {
-            if (gamePaused) return;
-
-            try {
-                // Move snake
-                const head = {
-                    x: snake[0].x + velocity.x,
-                    y: snake[0].y + velocity.y
-                };
-
-                // Check wall collision
-                if (head.x < 0 || head.x >= tileCount || head.y < 0 || head.y >= tileCount) {
-                    gameOver();
-                    return;
-                }
-
-                // Check self collision
-                for (let segment of snake) {
-                    if (head.x === segment.x && head.y === segment.y) {
-                        gameOver();
-                        return;
-                    }
-                }
-
-                snake.unshift(head);
-
-                // Check food collision
-                if (head.x === food.x && head.y === food.y) {
-                    score += 10;
-                    coins += 1;
-                    updateScore();
-                    placeFood();
-                    playCollectSound();
-                } else {
-                    snake.pop();
-                }
-
-                drawGame();
-            } catch (error) {
-                console.error('Oyun güncelleme hatası:', error);
-            }
-        }
-
-        function drawGame() {
-            // Clear canvas
-            ctx.fillStyle = '#1a1a2e';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            // Draw grid
-            ctx.strokeStyle = '#2a2a3e';
-            ctx.lineWidth = 1;
-            for (let i = 0; i <= tileCount; i++) {
-                ctx.beginPath();
-                ctx.moveTo(i * gridSize, 0);
-                ctx.lineTo(i * gridSize, canvas.height);
-                ctx.stroke();
-                ctx.beginPath();
-                ctx.moveTo(0, i * gridSize);
-                ctx.lineTo(canvas.width, i * gridSize);
-                ctx.stroke();
-            }
-
-            // Draw snake
-            snake.forEach((segment, index) => {
-                const gradient = ctx.createLinearGradient(
-                    segment.x * gridSize, 
-                    segment.y * gridSize,
-                    (segment.x + 1) * gridSize, 
-                    (segment.y + 1) * gridSize
-                );
-                
-                if (index === 0) {
-                    gradient.addColorStop(0, '#00ff88');
-                    gradient.addColorStop(1, '#00cc66');
-                } else {
-                    gradient.addColorStop(0, '#667eea');
-                    gradient.addColorStop(1, '#764ba2');
-                }
-                
-                ctx.fillStyle = gradient;
-                ctx.fillRect(
-                    segment.x * gridSize + 1, 
-                    segment.y * gridSize + 1, 
-                    gridSize - 2, 
-                    gridSize - 2
-                );
-
-                // Draw eyes on head
-                if (index === 0) {
-                    ctx.fillStyle = 'white';
-                    ctx.fillRect(segment.x * gridSize + 5, segment.y * gridSize + 5, 4, 4);
-                    ctx.fillRect(segment.x * gridSize + 11, segment.y * gridSize + 5, 4, 4);
-                }
-            });
-
-            // Draw food (coin)
-            const foodGradient = ctx.createRadialGradient(
-                food.x * gridSize + gridSize / 2,
-                food.y * gridSize + gridSize / 2,
-                0,
-                food.x * gridSize + gridSize / 2,
-                food.y * gridSize + gridSize / 2,
-                gridSize / 2
-            );
-            foodGradient.addColorStop(0, '#ffd700');
-            foodGradient.addColorStop(0.5, '#ffed4e');
-            foodGradient.addColorStop(1, '#ff9800');
-            
-            ctx.fillStyle = foodGradient;
-            ctx.beginPath();
-            ctx.arc(
-                food.x * gridSize + gridSize / 2,
-                food.y * gridSize + gridSize / 2,
-                gridSize / 2 - 2,
-                0,
-                Math.PI * 2
-            );
-            ctx.fill();
-
-            // Draw coin symbol
-            ctx.fillStyle = '#000';
-            ctx.font = 'bold 12px Arial';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText('$', food.x * gridSize + gridSize / 2, food.y * gridSize + gridSize / 2);
-        }
-
-        function placeFood() {
-            food = {
-                x: Math.floor(Math.random() * tileCount),
-                y: Math.floor(Math.random() * tileCount)
-            };
-
-            // Make sure food doesn't spawn on snake
-            for (let segment of snake) {
-                if (food.x === segment.x && food.y === segment.y) {
-                    placeFood();
-                    return;
-                }
-            }
-        }
-
-        function updateScore() {
-            scoreEl.textContent = score;
-            coinsEl.textContent = coins;
-            
-            if (score > highScore) {
-                highScore = score;
-                highScoreEl.textContent = highScore;
-            }
-        }
-
-        function gameOver() {
-            gameRunning = false;
-            clearInterval(gameLoop);
-            
-            document.getElementById('finalScore').textContent = score;
-            document.getElementById('finalCoins').textContent = coins;
-            
-            if (!walletAddress) {
-                document.getElementById('claimMessage').textContent = 
-                    'Coinlerinizi almak için önce cüzdanınızı bağlayın!';
-                claimBtn.disabled = true;
-            } else {
-                document.getElementById('claimMessage').textContent = 
-                    'Coinlerinizi cüzdanınıza aktarmak için Claim butonuna tıklayın!';
-                claimBtn.disabled = false;
-            }
-            
-            gameOverModal.style.display = 'flex';
-        }
-
-        async function claimCoins() {
-            if (!walletAddress) {
-                showNotification('Lütfen önce cüzdanınızı bağlayın!', 'error');
-                return;
-            }
-
-            if (coins === 0) {
-                showNotification('Claim edilecek coin yok!', 'error');
-                return;
-            }
-
-            try {
-                claimBtn.disabled = true;
-                claimBtn.textContent = 'İşlem yapılıyor...';
-
-                // Simulated blockchain transaction
-                // In a real implementation, this would interact with a smart contract
-                await new Promise(resolve => setTimeout(resolve, 2000));
-
-                showNotification(`${coins} COIN başarıyla cüzdanınıza aktarıldı! 🎉`, 'success');
-                
-                claimBtn.textContent = 'Claim Başarılı ✓';
-                
-                // Reset coins after claim
-                setTimeout(() => {
-                    coins = 0;
-                    updateScore();
-                }, 1500);
-
-            } catch (error) {
-                console.error('Claim hatası:', error);
-                showNotification('Claim işlemi başarısız oldu!', 'error');
-                claimBtn.disabled = false;
-                claimBtn.textContent = 'Claim Coins';
-            }
-        }
-
-        function playCollectSound() {
-            // Simple beep sound using Web Audio API
-            try {
-                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                const oscillator = audioContext.createOscillator();
-                const gainNode = audioContext.createGain();
-                
-                oscillator.connect(gainNode);
-                gainNode.connect(audioContext.destination);
-                
-                oscillator.frequency.value = 800;
-                oscillator.type = 'sine';
-                
-                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
-                
-                oscillator.start(audioContext.currentTime);
-                oscillator.stop(audioContext.currentTime + 0.1);
-            } catch (error) {
-                console.error('Ses çalma hatası:', error);
-            }
-        }
-
-        function showNotification(message, type) {
-            notification.textContent = message;
-            notification.className = `notification ${type}`;
-            notification.style.display = 'block';
-            
-            setTimeout(() => {
-                notification.style.display = 'none';
-            }, 3000);
-        }
-
-        // Initialize
-        drawGame();
-        highScoreEl.textContent = highScore;
-    </script>
-</body>
-
-</html>
-<!DOCTYPE html>
-<html>
-<head>
-    <!-- diğer kodlar -->
-</head>
-<body>
-    <!-- butonlar -->
-    <button onclick="addTempoNetwork()">Tempo'yu Metamask'a Ekle</button>
-    <button onclick="connectWallet()">Cüzdanı Bağla</button>
+contract EMRETokenGame {
+    string public name = "EMRE Game Token";
+    string public symbol = "EMRE";
+    uint8 public decimals = 18;
+    uint256 public totalSupply;
     
-    <!-- EN ÖNEMLİ: Script'i en alta ekle -->
-    <script src="network-config.js"></script>
+    mapping(address => uint256) public balanceOf;
+    mapping(address => uint256) public claimableTokens;
+    mapping(address => uint256) public totalEarned;
+    
+    address public owner;
+    
+    event Transfer(address indexed from, address indexed to, uint256 value);
+    event TokensEarned(address indexed player, uint256 amount);
+    event TokensClaimed(address indexed player, uint256 amount);
+    
+    constructor(uint256 initialSupply) {
+        owner = msg.sender;
+        totalSupply = initialSupply * 10 ** uint256(decimals);
+        balanceOf[owner] = totalSupply;
+    }
+    
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Only owner");
+        _;
+    }
+    
+    function addClaimableTokens(address player, uint256 amount) 
+        external onlyOwner {
+        claimableTokens[player] += amount;
+        totalEarned[player] += amount;
+        emit TokensEarned(player, amount);
+    }
+    
+    function claimTokens() external {
+        uint256 amount = claimableTokens[msg.sender];
+        require(amount > 0, "No tokens to claim");
+        require(balanceOf[owner] >= amount, "Insufficient supply");
+        
+        claimableTokens[msg.sender] = 0;
+        balanceOf[owner] -= amount;
+        balanceOf[msg.sender] += amount;
+        
+        emit Transfer(owner, msg.sender, amount);
+        emit TokensClaimed(msg.sender, amount);
+    }
+    
+    function getClaimableAmount(address player) 
+        external view returns (uint256) {
+        return claimableTokens[player];
+    }
+}
+            </div>
+
+            <h3>2. Remix IDE'de Deploy Etme</h3>
+            <ol>
+                <li><a href="https://remix.ethereum.org" target="_blank">Remix IDE</a>'yi açın</li>
+                <li>Yeni bir .sol dosyası oluşturun ve yukarıdaki kodu yapıştırın</li>
+                <li>Compiler sekmesinde 0.8.0+ versiyonu seçin ve derleyin</li>
+                <li>Deploy sekmesine gidin</li>
+                <li>Environment olarak "Injected Provider - MetaMask" seçin</li>
+                <li>MetaMask'ta Tempo Network'ü ekleyin (RPC detayları aşağıda)</li>
+                <li>initialSupply parametresine 1000000 girin</li>
+                <li>"Deploy" butonuna tıklayın ve MetaMask'tan onaylayın</li>
+                <li>Deploy edilen contract adresini kopyalayın</li>
+            </ol>
+
+            <h3>3. Tempo Network Ayarları</h3>
+            <p>MetaMask'a Tempo Testnet eklemek için:</p>
+            <ul>
+                <li><strong>Network Name:</strong> Tempo Testnet</li>
+                <li><strong>RPC URL:</strong> https://rpc.testnet.tempo.xyz</li>
+                <li><strong>Chain ID:</strong> (Tempo dokümantasyonunu kontrol edin)</li>
+                <li><strong>Currency Symbol:</strong> TEMPO</li>
+                <li><strong>Block Explorer:</strong> https://explorer.testnet.tempo.xyz</li>
+            </ul>
+
+            <h3>4. Frontend ile Entegrasyon</h3>
+            <p>Bu HTML dosyasında contract adresini güncelleyin (satır ~850 civarı):</p>
+            <div class="code-block">
+const CONTRACT_ADDRESS = 'BURAYA_CONTRACT_ADRESINIZI_YAPIŞTIRIN';
+            </div>
+
+            <h3>5. GitHub'da Yayınlama</h3>
+            <ol>
+                <li>GitHub'da yeni bir repository oluşturun</li>
+                <li>Bu HTML dosyasını "index.html" olarak kaydedin</li>
+                <li>Repository'ye yükleyin: git add . && git commit -m "Initial commit" && git push</li>
+                <li>Settings > Pages'den GitHub Pages'i aktifleştirin</li>
+                <li>Siteniz https://kullaniciadi.github.io/repo-adi adresinde yayınlanacak</li>
+            </ol>
+
+            <h3>📖 Kaynaklar</h3>
+            <ul>
+                <li><a href="https://docs.tempo.xyz/" target="_blank">Tempo Network Dokümantasyonu</a></li>
+                <li><a href="https://remix.ethereum.org" target="_blank">Remix IDE</a></li>
+                <li><a href="https://metamask.io" target="_blank">MetaMask Cüzdan</a></li>
+                <li><a href="https://docs.soliditylang.org/" target="_blank">Solidity Dokümantasyonu</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Smart Contract Konfigürasyonu
+        const CONTRACT_ADDRESS = '0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb4'; // Deploy sonrası buraya gerçek adresi yazın
+        const CONTRACT_ABI = [
+            {
+                "inputs": [{"internalType": "uint256", "name": "initialSupply", "type": "uint256"}],
+                "stateMutability": "nonpayable",
+                "type": "constructor"
+            },
+            {
+                "anonymous": false,
+                "inputs": [
+                    {"indexed": true, "internalType": "address", "name": "player", "type": "address"},
+                    {"indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256"}
+                ],
+                "name": "TokensClaimed",
+                "type": "event"
+            },
+            {
+                "anonymous": false,
+                "inputs": [
+                    {"indexed": true, "internalType": "address", "name": "player", "type": "address"},
+                    {"indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256"}
+                ],
+                "name": "TokensEarned",
+                "type": "event"
+            },
+            {
+                "inputs": [],
+                "name": "claimTokens",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [{"internalType": "address", "name": "player", "type": "address"}],
+                "name": "getClaimableAmount",
+                "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [{"internalType": "address", "name": "", "type": "address"}],
+                "name": "balanceOf",
+                "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [{"internalType": "address", "name": "", "type": "address"}],
+                "name": "claimableTokens",
+                "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+                "stateMutability": "view",
+                "type": "function"
+            }
+        ];
+
+        // Web3 ve Oyun Değişkenleri
+        let web3;
+        let contract;
+        let userAccount;
+        let gameRunning = false;
+        let gamePaused = false;
+        let score = 0;
+        let earnedTokens = 0;
+        let level = 1;
+        let highScore = 0;
+
+        // Canvas ve Oyun Elemanları
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        const player = {
+            x: 375,
+            y: 550,
+            width: 50,
+            height: 50,
+            speed: 5,
+            color: '#f093fb'
+        };
+
+        let tokens = [];
+        let obstacles = [];
+        let gameLoop;
+
+        // Klavye Kontrolleri
+        const keys = {
+            ArrowLeft: false,
+            ArrowRight: false,
+            ArrowUp: false,
+            ArrowDown: false
+        };
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            // Yüksek skoru localStorage'dan yükle (demo amaçlı, production'da blockchain kullanılmalı)
+            const savedHighScore = localStorage.getItem('emreGameHighScore');
+            if (savedHighScore) {
+                highScore = parseInt(savedHighScore);
+                document.getElementById('highScore').textContent = highScore;
+            }
+
+            document.getElementById('connectWallet').addEventListener('click', connectWallet);
+            document.getElementById('startGame').addEventListener('click', startGame);
+            document.getElementById('pauseGame').addEventListener('click', pauseGame);
+            document.getElementById('resetGame').addEventListener('click', resetGame);
+            document.getElementById('claimButton').addEventListener('click', claimTokens);
+
+            document.addEventListener('keydown', (e) => {
+                if (keys.hasOwnProperty(e.key)) {
+                    keys[e.key] = true;
+                    e.preventDefault();
+                }
+            });
+
+            document.addEventListener('keyup', (e) => {
+                if (keys.hasOwnProperty(e.key)) {
+                    keys[e.key] = false;
+                    e.preventDefault();
+                }
+            });
+
+            drawStartScreen();
+        });
+
+        // Cüzdan Bağlama Fonksiyonu
+        async function connectWallet() {
+            try {
+                if (typeof window.ethereum === 'undefined') {
+                    showStatus('MetaMask yüklü değil! Lütfen MetaMask kurun.', 'error');
+                    return;
+                }
+
+                // MetaMask ile bağlan
+                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                userAccount = accounts[0];
+
+                // Web3 başlat
+                web3 = new window.Web3(window.ethereum);
+                
+                // Contract örneği oluştur
+                contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
+
+                // Cüzdan bilgilerini göster
+                document.getElementById('walletAddress').textContent = 
+                    userAccount.slice(0, 6) + '...' + userAccount.slice(-4);
+
+                // Token balance güncelle
+                await updateTokenBalance();
+
+                // Claim edilebilir token miktarını kontrol et
+                await updateClaimableAmount();
+
+                showStatus('Cüzdan başarıyla bağlandı!', 'success');
+
+                // Hesap değişikliklerini dinle
+                window.ethereum.on('accountsChanged', (accounts) => {
+                    if (accounts.length === 0) {
+                        userAccount = null;
+                        document.getElementById('walletAddress').textContent = 'Cüzdan Bağlanmamış';
+                    } else {
+                        userAccount = accounts[0];
+                        document.getElementById('walletAddress').textContent = 
+                            userAccount.slice(0, 6) + '...' + userAccount.slice(-4);
+                        updateTokenBalance();
+                        updateClaimableAmount();
+                    }
+                });
+
+            } catch (error) {
+                console.error('Cüzdan bağlama hatası:', error);
+                showStatus('Cüzdan bağlanırken hata oluştu: ' + error.message, 'error');
+            }
+        }
+
+        // Token Balance Güncelleme
+        async function updateTokenBalance() {
+            try {
+                if (!contract || !userAccount) return;
+                
+                const balance = await contract.methods.balanceOf(userAccount).call();
+                const formattedBalance = web3.utils.fromWei(balance, 'ether');
+                document.getElementById('tokenBalance').textContent = 
+                    parseFloat(formattedBalance).toFixed(2);
+            } catch (error) {
+                console.error('Token balance hatası:', error);
+            }
+        }
+
+        // Claim Edilebilir Token Miktarını Güncelleme
+        async function updateClaimableAmount() {
+            try {
+                if (!contract || !userAccount) return;
+                
+                const claimable = await contract.methods.claimableTokens(userAccount).call();
+                const formattedAmount = web3.utils.fromWei(claimable, 'ether');
+                const claimAmountElement = document.getElementById('claimAmount');
+                claimAmountElement.textContent = parseFloat(formattedAmount).toFixed(2) + ' EMRE';
+
+                // Claim butonu aktivasyonu
+                const claimButton = document.getElementById('claimButton');
+                if (parseFloat(formattedAmount) > 0) {
+                    claimButton.disabled = false;
+                } else {
+                    claimButton.disabled = true;
+                }
+            } catch (error) {
+                console.error('Claimable amount hatası:', error);
+            }
+        }
+
+        // Token Claim Fonksiyonu
+        async function claimTokens() {
+            try {
+                if (!contract || !userAccount) {
+                    showStatus('Lütfen önce cüzdanınızı bağlayın!', 'error');
+                    return;
+                }
+
+                const claimButton = document.getElementById('claimButton');
+                const loading = document.getElementById('claimLoading');
+                
+                claimButton.disabled = true;
+                loading.classList.add('active');
+
+                // Smart contract'tan claim et
+                const tx = await contract.methods.claimTokens().send({ from: userAccount });
+                
+                showStatus('Tokenler başarıyla claim edildi! TX: ' + tx.transactionHash.slice(0, 10) + '...', 'success');
+                
+                // Bakiyeleri güncelle
+                await updateTokenBalance();
+                await updateClaimableAmount();
+                
+                // Earned tokens sıfırla
+                earnedTokens = 0;
+                document.getElementById('earnedTokens').textContent = earnedTokens;
+                document.getElementById('claimAmount').textContent = '0 EMRE';
+
+            } catch (error) {
+                console.error('Claim hatası:', error);
+                showStatus('Claim işlemi başarısız: ' + error.message, 'error');
+            } finally {
+                document.getElementById('claimLoading').classList.remove('active');
+            }
+        }
+
+        // Durum Mesajı Gösterme
+        function showStatus(message, type) {
+            const statusElement = document.getElementById('transactionStatus');
+            statusElement.textContent = message;
+            statusElement.className = 'transaction-status ' + type;
+            
+            setTimeout(() => {
+                statusElement.style.display = 'none';
+                statusElement.className = 'transaction-status';
+            }, 5000);
+        }
+
+        // Oyun Fonksiyonları
+        function startGame() {
+            if (gameRunning) return;
+            
+            gameRunning = true;
+            gamePaused = false;
+            document.getElementById('startGame').disabled = true;
+            document.getElementById('pauseGame').disabled = false;
+            
+            if (score === 0) {
+                resetGameState();
+            }
+            
+            gameLoop = setInterval(updateGame, 1000 / 60); // 60 FPS
+        }
+
+        function pauseGame() {
+            if (!gameRunning) return;
+            
+            gamePaused = !gamePaused;
+            document.getElementById('pauseGame').textContent = gamePaused ? 'Devam Et' : 'Duraklat';
+            
+            if (gamePaused) {
+                clearInterval(gameLoop);
+                drawPauseScreen();
+            } else {
+                gameLoop = setInterval(updateGame, 1000 / 60);
+            }
+        }
+
+        function resetGame() {
+            gameRunning = false;
+            gamePaused = false;
+            clearInterval(gameLoop);
+            
+            document.getElementById('startGame').disabled = false;
+            document.getElementById('pauseGame').disabled = true;
+            document.getElementById('pauseGame').textContent = 'Duraklat';
+            
+            resetGameState();
+            drawStartScreen();
+        }
+
+        function resetGameState() {
+            score = 0;
+            level = 1;
+            player.x = 375;
+            player.y = 550;
+            tokens = [];
+            obstacles = [];
+            
+            updateScoreDisplay();
+        }
+
+        function updateGame() {
+            if (gamePaused) return;
+            
+            // Oyuncu hareketi
+            if (keys.ArrowLeft && player.x > 0) {
+                player.x -= player.speed;
+            }
+            if (keys.ArrowRight && player.x < canvas.width - player.width) {
+                player.x += player.speed;
+            }
+            if (keys.ArrowUp && player.y > 0) {
+                player.y -= player.speed;
+            }
+            if (keys.ArrowDown && player.y < canvas.height - player.height) {
+                player.y += player.speed;
+            }
+
+            // Token oluşturma
+            if (Math.random() < 0.02 + (level * 0.005)) {
+                tokens.push({
+                    x: Math.random() * (canvas.width - 30),
+                    y: -30,
+                    width: 30,
+                    height: 30,
+                    speed: 2 + (level * 0.3),
+                    value: 1
+                });
+            }
+
+            // Engel oluşturma
+            if (Math.random() < 0.01 + (level * 0.002)) {
+                obstacles.push({
+                    x: Math.random() * (canvas.width - 40),
+                    y: -40,
+                    width: 40,
+                    height: 40,
+                    speed: 3 + (level * 0.4)
+                });
+            }
+
+            // Token hareketi ve çarpışma kontrolü
+            tokens = tokens.filter(token => {
+                token.y += token.speed;
+                
+                // Oyuncu ile çarpışma
+                if (checkCollision(player, token)) {
+                    score += 10 * level;
+                    earnedTokens += token.value;
+                    updateScoreDisplay();
+                    
+                    // Seviye atlama
+                    if (score > 0 && score % 100 === 0) {
+                        level++;
+                        document.getElementById('level').textContent = level;
+                    }
+                    
+                    return false; // Token'ı kaldır
+                }
+                
+                return token.y < canvas.height; // Ekrandan çıkan tokenları kaldır
+            });
+
+            // Engel hareketi ve çarpışma kontrolü
+            obstacles = obstacles.filter(obstacle => {
+                obstacle.y += obstacle.speed;
+                
+                // Oyuncu ile çarpışma - Oyun biter
+                if (checkCollision(player, obstacle)) {
+                    gameOver();
+                    return false;
+                }
+                
+                return obstacle.y < canvas.height;
+            });
+
+            draw();
+        }
+
+        function checkCollision(rect1, rect2) {
+            return rect1.x < rect2.x + rect2.width &&
+                   rect1.x + rect1.width > rect2.x &&
+                   rect1.y < rect2.y + rect2.height &&
+                   rect1.y + rect1.height > rect2.y;
+        }
+
+        function gameOver() {
+            gameRunning = false;
+            clearInterval(gameLoop);
+            
+            // Yüksek skor kontrolü
+            if (score > highScore) {
+                highScore = score;
+                localStorage.setItem('emreGameHighScore', highScore);
+                document.getElementById('highScore').textContent = highScore;
+            }
+            
+            drawGameOverScreen();
+            
+            document.getElementById('startGame').disabled = false;
+            document.getElementById('pauseGame').disabled = true;
+            
+            // Claim butonunu aktifleştir
+            if (earnedTokens > 0) {
+                const claimAmount = document.getElementById('claimAmount');
+                claimAmount.textContent = earnedTokens + ' EMRE';
+                document.getElementById('claimButton').disabled = false;
+            }
+        }
+
+        function updateScoreDisplay() {
+            document.getElementById('score').textContent = score;
+            document.getElementById('earnedTokens').textContent = earnedTokens;
+        }
+
+        // Çizim Fonksiyonları
+        function draw() {
+            // Arkaplan
+            ctx.fillStyle = '#1a1a2e';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Grid efekti
+            ctx.strokeStyle = 'rgba(102, 126, 234, 0.1)';
+            ctx.lineWidth = 1;
+            for (let i = 0; i < canvas.width; i += 50) {
+                ctx.beginPath();
+                ctx.moveTo(i, 0);
+                ctx.lineTo(i, canvas.height);
+                ctx.stroke();
+            }
+            for (let i = 0; i < canvas.height; i += 50) {
+                ctx.beginPath();
+                ctx.moveTo(0, i);
+                ctx.lineTo(canvas.width, i);
+                ctx.stroke();
+            }
+
+            // Tokenler
+            tokens.forEach(token => {
+                ctx.save();
+                ctx.translate(token.x + token.width / 2, token.y + token.height / 2);
+                ctx.rotate(Date.now() / 200);
+                
+                // Token glow efekti
+                const gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, token.width);
+                gradient.addColorStop(0, '#f5576c');
+                gradient.addColorStop(1, '#f093fb');
+                ctx.fillStyle = gradient;
+                
+                ctx.fillRect(-token.width / 2, -token.height / 2, token.width, token.height);
+                
+                // E harfi
+                ctx.fillStyle = '#fff';
+                ctx.font = 'bold 20px Arial';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('E', 0, 0);
+                
+                ctx.restore();
+            });
+
+            // Engeller
+            obstacles.forEach(obstacle => {
+                ctx.fillStyle = '#dc143c';
+                ctx.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
+                
+                // Uyarı işareti
+                ctx.fillStyle = '#fff';
+                ctx.font = 'bold 30px Arial';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('!', obstacle.x + obstacle.width / 2, obstacle.y + obstacle.height / 2);
+            });
+
+            // Oyuncu
+            const gradient = ctx.createLinearGradient(player.x, player.y, player.x, player.y + player.height);
+            gradient.addColorStop(0, '#f093fb');
+            gradient.addColorStop(1, '#667eea');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(player.x, player.y, player.width, player.height);
+            
+            // Oyuncu gözleri
+            ctx.fillStyle = '#fff';
+            ctx.fillRect(player.x + 12, player.y + 15, 8, 8);
+            ctx.fillRect(player.x + 30, player.y + 15, 8, 8);
+        }
+
+        function drawStartScreen() {
+            ctx.fillStyle = '#1a1a2e';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.fillStyle = '#f093fb';
+            ctx.font = 'bold 48px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('EMRE Token Oyunu', canvas.width / 2, canvas.height / 2 - 50);
+            
+            ctx.fillStyle = '#fff';
+            ctx.font = '24px Arial';
+            ctx.fillText('Oyunu başlatmak için "Oyunu Başlat" butonuna tıklayın', canvas.width / 2, canvas.height / 2 + 20);
+            ctx.fillText('Ok tuşları ile hareket edin', canvas.width / 2, canvas.height / 2 + 60);
+        }
+
+        function drawPauseScreen() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.fillStyle = '#fff';
+            ctx.font = 'bold 48px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('DURAKLATILDI', canvas.width / 2, canvas.height / 2);
+        }
+
+        function drawGameOverScreen() {
+            draw(); // Son durumu çiz
+            
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.fillStyle = '#f5576c';
+            ctx.font = 'bold 56px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('OYUN BİTTİ', canvas.width / 2, canvas.height / 2 - 80);
+            
+            ctx.fillStyle = '#fff';
+            ctx.font = '32px Arial';
+            ctx.fillText('Skor: ' + score, canvas.width / 2, canvas.height / 2 - 20);
+            ctx.fillText('Kazanılan Token: ' + earnedTokens + ' EMRE', canvas.width / 2, canvas.height / 2 + 30);
+            
+            if (score > highScore) {
+                ctx.fillStyle = '#38ef7d';
+                ctx.font = 'bold 28px Arial';
+                ctx.fillText('🎉 YENİ REKOR! 🎉', canvas.width / 2, canvas.height / 2 + 80);
+            }
+        }
+
+        // Web3 kütüphanesini dinamik olarak yükle
+        (function() {
+            const script = document.createElement('script');
+            script.src = 'https://cdn.jsdelivr.net/npm/web3@1.8.0/dist/web3.min.js';
+            script.onload = function() {
+                console.log('Web3 yüklendi');
+            };
+            document.head.appendChild(script);
+        })();
+    </script>
 </body>
 </html>
-
